@@ -1,49 +1,89 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View} from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+import Nav from './src/nav';
+import Generator from './src/generator';
+import ListItem from './src/listItem';
 
-type Props = {};
-export default class App extends Component<Props> {
+class App extends Component {
+
+  state = {
+    nameOfApp: 'My awesome App',
+    random: []
+  }
+
+  onAddNumber = () => {
+    const random = Math.floor(Math.random() * 1000)
+    this.setState(prevState => {
+      return {
+        random:[...prevState.random, random]
+      }
+    })
+  }
+
+  onItemDelete = (id) => {
+    const newArray = this.state.random.filter((item, i) => {
+      return id !== i
+    })
+    this.setState({ random: newArray })
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+      <View style={styles.mainView}>
+
+        <Nav 
+          name={this.state.nameOfApp}
+        />
+
+        <View style={styles.basicView}>
+          <Text style={styles.basicText}>React App</Text>
+        </View>
+        <View style={styles.basicView}>
+          <Text style={styles.basicText}>React App</Text>
+        </View>
+
+        <Generator 
+          onAddNumber={this.onAddNumber}
+        />
+        <ListItem 
+          items={this.state.random}
+          delete={this.onItemDelete}
+        />
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    paddingTop: 50,
+    alignItems: 'flex-start',
+    width: '100%',
+    justifyContent: 'flex-start',
   },
-  welcome: {
+  basicView: {
+    backgroundColor: 'green',
+    marginBottom: 10,
+    width: '100%',
+  },
+  basicText: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    color: '#fff',
+    padding: 20
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
+  basicNumberContainer: {
+    backgroundColor: '#fff',
+    alignSelf: 'center'
+  },  
+  basicNumber: {
+    color: '#000',
+    fontSize: 20,
+    textAlign: 'center'
+  }
+})
+
+export default App
